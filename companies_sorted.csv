@@ -15,20 +15,20 @@ Company Name,URL,Glassdoor Rating
 "Wisedocs","https://www.wisedocs.ai/",4.8
 "AvoMD","https://www.avomd.com/",4.8
 "Hona Health","https://hona.ai/",4.8
+"Reimagine Care","https://reimaginecare.com/",4.7
 "Semantic Health","https://www.semantichealth.ai/",4.7
 "Abridge","https://www.abridge.com/",4.6
 "Artisight","https://artisight.com/",4.6
 "Eleos","https://eleos.health/",4.6
 "Regard","https://withregard.com/",4.6
 "Subtle Medical","https://subtlemedical.com/",4.6
+"Theator","https://www.theator.io/",4.6
 "Switchboard, MD","https://www.switchboardmd.com/",4.6
 "Aidoc","https://www.aidoc.com/",4.5
 "Cedar Pay","https://www.cedar.com/",4.5
 "Avaamo","https://avaamo.ai/",4.5
 "Digital Diagnostics","https://www.digitaldiagnostics.com/products/eye-disease/lumineticscore/",4.5
 "Navina","https://www.navina.ai/",4.5
-"Reimagine Care","https://reimaginecare.com/",4.5
-"Theator","https://www.theator.io/",4.5
 "Synaptec Health","https://www.synaptechealth.com/",4.5
 "Lunit","https://www.lunit.io/en",4.4
 "Ambience Healthcare","https://www.ambiencehealthcare.com/",4.4
@@ -37,19 +37,21 @@ Company Name,URL,Glassdoor Rating
 "Cadence","https://www.cadence.care/",4.3
 "Etiometry","https://www.etiometry.com/",4.3
 "Navenio","https://navenio.com/north-america/solutions/",4.3
+"EliseAI","https://health.eliseai.com/",4.2
 "Suki","https://suki.ai/",4.2
 "Waystar","https://www.waystar.com/our-platform/financial-clearance/authorizations/",4.2
 "Corti","https://www.corti.ai/",4.2
-"PayZen","https://payzen.com/",4.1
+"Eon Patient Management","https://eonhealth.com/epm/",4.2
 "Ushur","https://ushur.com/solutions/industries/healthcare/",4.1
 "Woebot","https://woebothealth.com/",4.1
 "Bayesian Health","https://www.bayesianhealth.com/",4.1
 "Nym","https://nym.health/",4.1
 "Develop Health","https://www.develophealth.io/",4.1
-"EliseAI","https://health.eliseai.com/",4
+"LeanTaaS","https://leantaas.com/",4
+"PayZen","https://payzen.com/",4
 "Authenticx","https://authenticx.com/",4
 "Element5","https://www.e5.ai/",4
-"Eon Patient Management","https://eonhealth.com/epm/",4
+"Infinitus","https://www.infinitus.ai/",4
 "RapidClaims","https://www.rapidclaims.ai/",4
 "SOAP Health","https://soap.health/",4
 "XpertCoding","https://www.xpertdox.com/",4
@@ -59,8 +61,6 @@ Company Name,URL,Glassdoor Rating
 "Arrow","https://arrowhq.com/",3.8
 "CorroHealth","https://corrohealth.com/",3.8
 "Innovaccer","https://www.innovaccer.com/",3.8
-"LeanTaaS","https://leantaas.com/",3.8
-"Infinitus","https://www.infinitus.ai/",3.8
 "Notable","https://www.notablehealth.com/assistant",3.8
 "CARPL","https://carpl.ai/",3.8
 "Laguna Health","https://lagunahealth.com/",3.7
@@ -73,13 +73,13 @@ Company Name,URL,Glassdoor Rating
 "Decoded Health","https://www.decodedhealth.com/",3.6
 "iScribe","https://iscribehealth.com/",3.6
 "Augmedix","https://augmedix.com/augmedix-go/",3.5
-"Biofourmis","https://www.biofourmis.com/care-delivery",3.5
+"Pieces","https://piecestech.com/",3.5
+"Syllable","https://syllable.ai/",3.5
 "PayMedix","https://www.paymedix.com/",3.5
 "Sirona","https://sironamedical.com/",3.5
 "Replika","https://replika.com/",3.5
 "Thoughtful AI","https://www.thoughtful.ai/",3.5
-"Pieces","https://piecestech.com/",3.4
-"Syllable","https://syllable.ai/",3.3
+"Biofourmis","https://www.biofourmis.com/care-delivery",3.3
 "Fathom","https://www.fathomhealth.com/",3.3
 "Fabric","https://www.fabrichealth.com/",3.3
 "Glass Health","https://glass.health/",3.3

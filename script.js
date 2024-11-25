@@ -15,7 +15,7 @@ const path = require('path');
     // Extract company names and URLs
     const companies = await page.evaluate(() => {
         const companyData = [];
-        const excludedUrls = ['viz.ai', 'care.ai', 'teton.ai', 'basys.ai', 'genhealth.ai'];
+        const excludedUrls = ['keragon.com','viz.ai', 'care.ai', 'teton.ai', 'basys.ai', 'genhealth.ai'];
 
         const companyElements = document.querySelectorAll('h3 > strong'); // Company names
         const linkElements = Array.from(document.querySelectorAll('a[href]')) // Links
@@ -23,7 +23,7 @@ const path = require('path');
 
         companyElements.forEach((element, index) => {
             const companyName = element.innerText.trim();
-            const linkElement = linkElements[index+9];
+            const linkElement = linkElements[index];
             const companyUrl = linkElement ? linkElement.href.trim() : null;
             companyData.push({ name: companyName, url: companyUrl });
         });
@@ -44,6 +44,7 @@ const path = require('path');
         const pageContent = await page.content();
         const ratingMatch = pageContent.match(/Rated (\d+\.\d+) out of 5/); // Use original regex logic
         const rating = ratingMatch ? parseFloat(ratingMatch[1]) : null;
+        console.log(company.name, rating);
 
         await page.close();
         return { ...company, rating };
