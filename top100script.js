@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path'); 
 const URL = 'https://thehealthcaretechnologyreport.com/the-top-100-healthcare-technology-companies-of-2024/';
-const OUTPUT_PATH='companies_sorted_100.csv';
+const OUTPUT_PATH = 'companies_sorted_100.csv';
 
 (async () => {
     const browser = await puppeteer.launch({ headless: true }); // Change to true for production
@@ -31,27 +31,33 @@ const OUTPUT_PATH='companies_sorted_100.csv';
 
     console.log('Extracted companies:', companies);
 
-
-    // Function to fetch Glassdoor rating
-    const fetchRating = async (browser, company) => {
-        const searchQuery = encodeURIComponent(`${company.name} site:glassdoor.com`);
+    // Function to fetch Glassdoor rating and employee count
+    const fetchDetails = async (browser, company) => {
+        const searchQuery = encodeURIComponent(`${company.name} company size site:glassdoor.com`);
         const searchUrl = `https://www.google.com/search?q=${searchQuery}`;
 
         const page = await browser.newPage();
         await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 0 });
 
+        const employeeCount = await page.evaluate(() => {
+            const emElements = Array.from(document.querySelectorAll('em'));
+            const emText = emElements.map(el => el.textContent);
+            return emText.find(text => text.includes('Employees')) || null;
+        });
+
         const pageContent = await page.content();
-        const ratingMatch = pageContent.match(/Rated (\d+\.\d+) out of 5/); // Use original regex logic
+        const ratingMatch = pageContent.match(/Rated (\d+\.\d+) out of 5/); // Adjust regex as needed
         const rating = ratingMatch ? parseFloat(ratingMatch[1]) : null;
-        console.log(company.name, rating);
+
+        console.log(`Fetched for ${company.name}: Rating - ${rating}, Employees - ${employeeCount}`);
 
         await page.close();
-        return { ...company, rating };
+        return { ...company, rating, employeeCount };
     };
 
-    // Run rating fetches in parallel
+    // Run fetches in parallel
     const results = await Promise.all(
-        companies.map(company => fetchRating(browser, company))
+        companies.map(company => fetchDetails(browser, company))
     );
 
     // Sort by Glassdoor rating descending
@@ -62,9 +68,9 @@ const OUTPUT_PATH='companies_sorted_100.csv';
     console.log('Sorted results:', sortedResults);
 
     // Save results to CSV
-    const csvHeader = 'Company Name,Glassdoor Rating\n';
+    const csvHeader = 'Company Name,Glassdoor Rating,Employee Count\n';
     const csvRows = sortedResults.map(
-        ({ name, rating }) => `"${name}",${rating}`
+        ({ name, rating, employeeCount }) => `"${name}",${rating},"${employeeCount}"`
     );
     const csvContent = csvHeader + csvRows.join('\n');
 

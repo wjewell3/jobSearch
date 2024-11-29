@@ -1,98 +1,90 @@
-Company Name,Glassdoor Rating
-"Denali",5
-"Elegen",5
-"Casana",5
-"CodaMetrix",4.8
-"Abcuro",4.8
-"Revolution",4.7
-"BillionToOne",4.6
-"Consensus",4.6
-"Ostro",4.5
-"Cynerio",4.5
-"PartsSource",4.5
-"Sutro",4.4
-"Promaxo",4.4
-"Merit",4.3
-"Kontakt.io",4.2
-"PTC",4.1
-"Nym",4.1
-"Regeneron",4
-"LifeLabs",4
-"Jazz",4
-"Aspen",4
-"Ardelyx",4
-"Zynex",4
-"Omada",4
-"Intelligencia",4
-"Quris-AI",4
-"Noah",4
-"Trusted",3.9
-"Welldoc",3.9
-"Viz.ai",3.9
-"Medtronic",3.8
-"Rightway",3.8
-"Orca",3.8
-"Spring",3.7
-"SS",3.7
-"Arcturus",3.7
-"Scientist.com",3.7
-"Corza",3.6
-"Heidi",3.6
-"CliniComp",3.6
-"Privia",3.5
-"Blueprint",3.5
-"Tandem",3.5
-"Biodesix",3.5
-"Rocket",3.5
-"Insilico",3.5
-"Kipu",3.5
-"Veradigm",3.5
-"Angle",3.5
-"Simple",3.5
-"Bamboo",3.5
-"KLOwen",3.5
-"Visualutions",3.5
-"Forward",3.5
-"Codonics",3.5
-"Intellia",3.5
-"Jelvix",3.5
-"Vizzia",3.5
-"Omnicell",3.4
-"Natus",3.4
-"Livara",3.4
-"Outset",3.4
-"PCI",3.3
-"LivaNova",3.3
-"argenx",3.3
-"Phathom",3.3
-"Maven",3.3
-"RxSight",3.3
-"Kestra",3.3
-"Access",3.2
-"Penumbra",3.2
-"Honor",3.2
-"Sword",3.2
-"embecta",3.1
-"Tebra",3.1
-"SAB",3.1
-"Integra",3
-"Endologix",3
-"Caris",3
-"Burlington",3
-"Relias",3
-"Iovance",3
-"OrthAlign",3
-"HeartFlow",3
-"Carrot",3
-"SimpleTherapy",3
-"Allurion",3
-"Castle",2.9
-"Amwell",2.9
-"BenchSci",2.9
-"PHC",2.8
-"Globus",2.8
-"Lumeris",2.7
-"CareDx",2.7
-"Microbiologics",2.6
-"Axxess",2.6
-"Henry",2.3
+Company Name,Glassdoor Rating,Employee Count
+"Castle",5,"1 to 50 Employees"
+"Blueprint",5,"51 to 200 Employees"
+"Tandem",5,"51 to 200 Employees"
+"Elegen",5,"1001 to 5000 Employees"
+"CodaMetrix",5,"51 to 200 Employees"
+"Nym",5,"1 to 50 Employees"
+"Ostro",5,"1 to 50 Employees"
+"Casana",5,"51 to 200 Employees"
+"Abcuro",4.8,"Employees"
+"Cynerio",4.7,"51 to 200 Employees"
+"BillionToOne",4.6,"Employees"
+"Omada",4.6,"null"
+"Rocket",4.5,"201 to 500 Employees"
+"Consensus",4.5,"51 to 200 Employees"
+"Promaxo",4.5,"1 to 50 Employees"
+"Sutro",4.4,"1 to 50 Employees"
+"PartsSource",4.4,"51 to 200 Employees"
+"Kontakt.io",4.2,"51 to 200 Employees"
+"Intelligencia",4.2,"51 to 200 Employees"
+"Orca",4.1,"1001 to 5000 Employees"
+"Regeneron",4,"Global Company Size10000+ Employees"
+"Aspen",4,"1001 to 5000 Employees"
+"Ardelyx",4,"5001 to 10000 Employees"
+"PTC",4,"5001 to 10000 Employees"
+"Intellia",4,"1 to 50 Employees"
+"Zynex",3.9,"Global Company Size501 to 1000 Employees"
+"SAB",3.9,"1 to 50 Employees"
+"Welldoc",3.9,"201 to 500 Employees"
+"Viz.ai",3.9,"201 to 500 Employees"
+"Medtronic",3.8,"null"
+"Merit",3.8,"51 to 200 Employees"
+"Rightway",3.8,"51 to 200 Employees"
+"Maven",3.8,"1 to 50 Employees"
+"Revolution",3.8,"1 to 50 Employees"
+"Arcturus",3.7,"1 to 50 Employees"
+"Scientist.com",3.7,"1 to 50 Employees"
+"Visualutions",3.7,"null"
+"Trusted",3.6,"Global Company Size10000+ Employees"
+"CliniComp",3.6,"51 to 200 Employees"
+"Vizzia",3.6,"1 to 50 Employees"
+"Omnicell",3.5,"1001 to 5000 Employees"
+"Denali",3.5,"Global Company Size10000+ Employees"
+"Spring",3.5,"201 to 500 Employees"
+"SS",3.5,"1001 to 5000 Employees"
+"Angle",3.5,"51 to 200 Employees"
+"Simple",3.5,"null"
+"Bamboo",3.5,"51 to 200 Employees"
+"Forward",3.5,"1 to 50 Employees"
+"Biodesix",3.4,"51 to 200 Employees"
+"Veradigm",3.4,"5001 to 10000 Employees"
+"Jelvix",3.4,"51 to 200 Employees"
+"Globus",3.3,"201 to 500 Employees"
+"Jazz",3.3,"1001 to 5000 Employees"
+"LivaNova",3.3,"1001 to 5000 Employees"
+"argenx",3.3,"201 to 500 Employees"
+"Codonics",3.3,"Employees"
+"Noah",3.3,"1 to 50 Employees"
+"RxSight",3.3,"null"
+"Access",3.2,"1001 to 5000 Employees"
+"LifeLabs",3.2,"1001 to 5000 Employees"
+"Penumbra",3.2,"1001 to 5000 Employees"
+"PCI",3.2,"51 to 200 Employees"
+"HeartFlow",3.2,"501 to 1000 Employees"
+"embecta",3.1,"1001 to 5000 Employees"
+"Honor",3.1,"501 to 1000 Employees"
+"Privia",3.1,"1 to 50 Employees"
+"Tebra",3.1,"1001 to 5000 Employees"
+"Sword",3.1,"201 to 500 Employees"
+"Iovance",3.1,"201 to 500 Employees"
+"Kestra",3.1,"1 to 50 Employees"
+"Endologix",3,"Employees"
+"Caris",3,"null"
+"Heidi",3,"1 to 50 Employees"
+"Natus",3,"1001 to 5000 Employees"
+"OrthAlign",3,"1 to 50 Employees"
+"Outset",3,"Global Company Size10000+ Employees"
+"Integra",2.9,"1001 to 5000 Employees"
+"Burlington",2.9,"Global Company Size10000+ Employees"
+"Amwell",2.9,"501 to 1000 Employees"
+"BenchSci",2.9,"201 to 500 Employees"
+"Carrot",2.9,"1 to 50 Employees"
+"SimpleTherapy",2.9,"1 to 50 Employees"
+"Relias",2.8,"Employees"
+"Lumeris",2.7,"1001 to 5000 Employees"
+"CareDx",2.6,"Employees"
+"Microbiologics",2.6,"501 to 1000 Employees"
+"Axxess",2.6,"201 to 500 Employees"
+"PHC",2.4,"Global Company Size1001 to 5000 Employees"
+"Henry",2.3,"51 to 200 Employees"
