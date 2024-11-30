@@ -1,105 +1,117 @@
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
-const readline = require('readline');
+const csvParser = require('csv-parser');
+const { parse } = require('json2csv');
+const puppeteer = require('puppeteer');
 
 const INPUT_PATH = 'builtinCompaniesWithDetailsDistinct.csv';
-const OUTPUT_PATH = 'builtinCompaniesWithDetailsDistinctHighRatings.csv';
-const CHUNK_SIZE = 50;
+const OUTPUT_PATH = 'builtinCompaniesWithCareersURLs.csv';
+const CONCURRENCY_LIMIT = 10;
 
-// Utility function to prompt the user
-const waitForUserInput = (promptMessage) => {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-    return new Promise((resolve) => {
-        rl.question(promptMessage, (answer) => {
-            rl.close();
-            resolve(answer);
-        });
-    });
-};
-
-// Function to fetch Glassdoor rating and employee count
-const fetchDetails = async (browser, companyName) => {
-    const searchQuery = encodeURIComponent(`${companyName} company size site:glassdoor.com`);
+const fetchCareersURL = async (browser, company) => {
+    const searchQuery = encodeURIComponent(`${company.companyName} view job openings`);
     const searchUrl = `https://www.google.com/search?q=${searchQuery}`;
-
     try {
         const page = await browser.newPage();
-        console.log(`Fetching details for ${companyName}...`);
-        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 30000 }); // 30-second timeout
+        await page.goto(searchUrl, { waitUntil: 'networkidle2', timeout: 30000 });
 
-        // Extract rating using querySelector
-        const rating = await page.evaluate(() => {
-            const ratingElement = document.querySelector('span.yi40Hd.YrbPuc');
-            return ratingElement ? parseFloat(ratingElement.textContent.trim()) : null;
+        const careersURL = await page.evaluate(() => {
+            const linkElement = document.querySelector('div.yuRUbf a');
+            return linkElement ? linkElement.href : null;
         });
 
-        // Extract employee count
-        const employeeCount = await page.evaluate(() => {
-            const emElements = Array.from(document.querySelectorAll('em'));
-            const emText = emElements.map(el => el.textContent);
-            return emText.find(text => text.includes('Employees')) || null;
-        });
-
-        console.log(`Fetched for ${companyName}: Rating - ${rating}, Employees - ${employeeCount}`);
+        company.careersURL = careersURL || null; // Explicit null if no URL is found
+        console.log(`Found URL for ${company.companyName}: ${company.careersURL}`);
         await page.close();
-        return { name: companyName, rating, employeeCount };
     } catch (error) {
-        console.error(`Failed to fetch details for ${companyName}: ${error.message}`);
-        return { name: companyName, rating: null, employeeCount: null };
+        console.error(`Failed to fetch URL for ${company.companyName}: ${error.message}`);
+        company.careersURL = null;
     }
+    return company;
 };
 
-// Function to process a chunk of companies
-const processChunk = async (browser, chunk) => {
-    const fetchPromises = chunk.map(companyName => fetchDetails(browser, companyName));
-    return Promise.all(fetchPromises);
+const readExistingOutput = async (outputPath) => {
+    const processedCompanies = new Set();
+    if (fs.existsSync(outputPath)) {
+        await new Promise((resolve, reject) => {
+            fs.createReadStream(path.resolve(__dirname, outputPath))
+                .pipe(csvParser())
+                .on('data', (row) => {
+                    processedCompanies.add(row['Company Name']);
+                })
+                .on('end', resolve)
+                .on('error', reject);
+        });
+    }
+    return processedCompanies;
+};
+
+const appendToOutput = (row, outputPath) => {
+    const csvContent = parse([row], { header: false });
+    fs.appendFileSync(outputPath, `\n${csvContent}`);
+};
+
+const processInBatches = async (companies, concurrencyLimit, taskFn) => {
+    const results = [];
+    for (let i = 0; i < companies.length; i += concurrencyLimit) {
+        const batch = companies.slice(i, i + concurrencyLimit);
+        console.log(`Processing batch: ${i / concurrencyLimit + 1}/${Math.ceil(companies.length / concurrencyLimit)}`);
+        const batchResults = await Promise.all(batch.map(taskFn));
+        results.push(...batchResults);
+    }
+    return results;
 };
 
 (async () => {
-    const browser = await puppeteer.launch({ headless: true });
+    try {
+        const companies = [];
+        console.log(`Reading input CSV from ${INPUT_PATH}...`);
+        await new Promise((resolve, reject) => {
+            fs.createReadStream(path.resolve(__dirname, INPUT_PATH))
+                .pipe(csvParser())
+                .on('data', (row) => {
+                    companies.push({
+                        companyName: row['Company Name'].trim(),
+                        rating: row['Max Glassdoor Rating'],
+                        employeeCount: row['Max Employee Count'],
+                    });
+                })
+                .on('end', resolve)
+                .on('error', reject);
+        });
+        console.log(`Loaded ${companies.length} companies.`);
 
-    // Read companies from the input CSV
-    const csvContent = fs.readFileSync(path.resolve(__dirname, INPUT_PATH), 'utf-8');
-    const companies = csvContent.split('\n').slice(1).map(line => line.replace(/"/g, '').trim()).filter(Boolean);
+        const processedCompanies = await readExistingOutput(OUTPUT_PATH);
+        console.log(`Skipping ${processedCompanies.size} already processed companies.`);
 
-    // Check for existing output file and determine already processed companies
-    let processedCompanies = [];
-    if (fs.existsSync(OUTPUT_PATH)) {
-        const outputContent = fs.readFileSync(path.resolve(__dirname, OUTPUT_PATH), 'utf-8');
-        processedCompanies = outputContent.split('\n').slice(1).map(line => line.split(',')[0].replace(/"/g, '').trim());
+        const browser = await puppeteer.launch({ headless: true });
+
+        // Filter companies to process only unprocessed ones
+        const companiesToProcess = companies.filter(
+            (company) => !processedCompanies.has(company.companyName)
+        );
+
+        // Process in batches with concurrency
+        await processInBatches(companiesToProcess, CONCURRENCY_LIMIT, async (company) => {
+            const result = await fetchCareersURL(browser, company);
+
+            if (result.careersURL) { // Append only if URL is found
+                const row = {
+                    'Company Name': result.companyName,
+                    'Max Glassdoor Rating': result.rating,
+                    'Max Employee Count': result.employeeCount,
+                    'Careers Site URL': result.careersURL,
+                };
+                appendToOutput(row, OUTPUT_PATH);
+                console.log(`Appended company: ${company.companyName}`);
+            } else {
+                console.log(`No URL found for ${company.companyName}, skipping.`);
+            }
+        });
+
+        await browser.close();
+        console.log(`Processing complete.`);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
     }
-
-    const remainingCompanies = companies.filter(company => !processedCompanies.includes(company));
-    console.log(`Found ${remainingCompanies.length} companies remaining to process.`);
-
-    const totalChunks = Math.ceil(remainingCompanies.length / CHUNK_SIZE);
-    let allResults = [];
-
-    for (let i = 0; i < remainingCompanies.length; i += CHUNK_SIZE) {
-        const chunk = remainingCompanies.slice(i, i + CHUNK_SIZE);
-        console.log(`Processing chunk ${i / CHUNK_SIZE + 1} of ${totalChunks}...`);
-
-        const chunkResults = await processChunk(browser, chunk);
-
-        // Append chunk results to the output file
-        const csvRows = chunkResults.map(
-            ({ name, rating, employeeCount }) => `"${name}",${rating || 'N/A'},"${employeeCount || 'N/A'}"`
-        ).join('\n');
-        fs.appendFileSync(path.resolve(__dirname, OUTPUT_PATH), csvRows + '\n');
-
-        console.log(`Chunk ${i / CHUNK_SIZE + 1} written to file.`);
-
-        // Pause after processing a chunk
-        if (i + CHUNK_SIZE < remainingCompanies.length) {
-            console.log('Pausing to allow VPN switch...');
-            await waitForUserInput('Please switch VPN servers and press Enter to continue: ');
-        }
-    }
-
-    console.log(`All details saved to ${OUTPUT_PATH}`);
-    await browser.close();
 })();
