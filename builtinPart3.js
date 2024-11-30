@@ -31,12 +31,21 @@ const OUTPUT_PATH = 'builtinCompaniesWithDetailsDistinct.csv'; // Replace with y
                 .on('error', reject);
         });
 
-        // Step 2: Transform the grouped data into an array for CSV writing
-        const results = Object.entries(companies).map(([name, { rating, employeeCount }]) => ({
-            'Company Name': name,
-            'Max Glassdoor Rating': rating || 'N/A',
-            'Max Employee Count': employeeCount || 'N/A',
-        }));
+        // Step 2: Transform the grouped data into an array, filter by rating >= 3.8, and sort
+        const results = Object.entries(companies)
+            .filter(([_, { rating }]) => rating >= 3.8) // Only include companies with rating >= 3.8
+            .map(([name, { rating, employeeCount }]) => ({
+                'Company Name': name,
+                'Max Glassdoor Rating': rating || 'N/A',
+                'Max Employee Count': employeeCount || 'N/A',
+            }))
+            .sort((a, b) => {
+                // Sort by rating (descending), then by name (descending)
+                if (b['Max Glassdoor Rating'] !== a['Max Glassdoor Rating']) {
+                    return b['Max Glassdoor Rating'] - a['Max Glassdoor Rating'];
+                }
+                return b['Company Name'].localeCompare(a['Company Name']);
+            });
 
         // Step 3: Write the results to a new CSV file
         console.log(`Writing results to ${OUTPUT_PATH}...`);
