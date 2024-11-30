@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 
 const INPUT_PATH = 'builtinCompaniesWithDetailsDistinct.csv';
 const OUTPUT_PATH = 'builtinCompaniesWithCareersURLs.csv';
-const CONCURRENCY_LIMIT = 10;
+const CONCURRENCY_LIMIT = 5;
 
 const fetchCareersURL = async (browser, company) => {
     const searchQuery = encodeURIComponent(`${company.companyName} view job openings`);
@@ -103,7 +103,7 @@ const processInBatches = async (companies, concurrencyLimit, taskFn) => {
                     'Careers Site URL': result.careersURL,
                 };
                 appendToOutput(row, OUTPUT_PATH);
-                console.log(`Appended company: ${company.companyName}`);
+                // console.log(`Appended company: ${company.companyName}`);
             } else {
                 console.log(`No URL found for ${company.companyName}, skipping.`);
             }
