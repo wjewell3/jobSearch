@@ -62,41 +62,44 @@ const processChunk = async (browser, chunk) => {
 (async () => {
     const browser = await puppeteer.launch({ headless: true });
 
-    // Read companies from CSV
+    // Read companies from the input CSV
     const csvContent = fs.readFileSync(path.resolve(__dirname, INPUT_PATH), 'utf-8');
     const companies = csvContent.split('\n').slice(1).map(line => line.replace(/"/g, '').trim()).filter(Boolean);
 
-    console.log(`Loaded ${companies.length} companies from CSV.`);
-
-    const outputPath = path.resolve(__dirname, OUTPUT_PATH);
-
-    // Write the header to the output file
-    if (!fs.existsSync(outputPath)) {
-        const csvHeader = 'Company Name,Glassdoor Rating,Employee Count\n';
-        fs.writeFileSync(outputPath, csvHeader);
+    // Check for existing output file and determine already processed companies
+    let processedCompanies = [];
+    if (fs.existsSync(OUTPUT_PATH)) {
+        const outputContent = fs.readFileSync(path.resolve(__dirname, OUTPUT_PATH), 'utf-8');
+        processedCompanies = outputContent.split('\n').slice(1).map(line => line.split(',')[0].replace(/"/g, '').trim());
     }
 
-    for (let i = 0; i < companies.length; i += CHUNK_SIZE) {
-        const chunk = companies.slice(i, i + CHUNK_SIZE);
-        console.log(`Processing chunk ${i / CHUNK_SIZE + 1} of ${Math.ceil(companies.length / CHUNK_SIZE)}...`);
+    const remainingCompanies = companies.filter(company => !processedCompanies.includes(company));
+    console.log(`Found ${remainingCompanies.length} companies remaining to process.`);
+
+    const totalChunks = Math.ceil(remainingCompanies.length / CHUNK_SIZE);
+    let allResults = [];
+
+    for (let i = 0; i < remainingCompanies.length; i += CHUNK_SIZE) {
+        const chunk = remainingCompanies.slice(i, i + CHUNK_SIZE);
+        console.log(`Processing chunk ${i / CHUNK_SIZE + 1} of ${totalChunks}...`);
 
         const chunkResults = await processChunk(browser, chunk);
 
-        // Append chunk results to the CSV file
+        // Append chunk results to the output file
         const csvRows = chunkResults.map(
             ({ name, rating, employeeCount }) => `"${name}",${rating || 'N/A'},"${employeeCount || 'N/A'}"`
         ).join('\n');
-        fs.appendFileSync(outputPath, csvRows + '\n');
+        fs.appendFileSync(path.resolve(__dirname, OUTPUT_PATH), csvRows + '\n');
 
         console.log(`Chunk ${i / CHUNK_SIZE + 1} written to file.`);
 
         // Pause after processing a chunk
-        if (i + CHUNK_SIZE < companies.length) {
+        if (i + CHUNK_SIZE < remainingCompanies.length) {
             console.log('Pausing to allow VPN switch...');
             await waitForUserInput('Please switch VPN servers and press Enter to continue: ');
         }
     }
 
-    console.log(`All details saved to ${outputPath}`);
+    console.log(`All details saved to ${OUTPUT_PATH}`);
     await browser.close();
 })();
